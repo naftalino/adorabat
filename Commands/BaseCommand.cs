@@ -3,10 +3,12 @@ using Telegram.Bot.Types;
 
 namespace bot.Commands
 {
-    public abstract class BaseCommand
+    public abstract class BaseCommand : IDisposable
     {
         protected ITelegramBotClient BotClient;
         protected Update Update;
+
+        private IServiceScope? _scope;
 
         public BaseCommand(ITelegramBotClient botClient, Update update)
         {
@@ -14,25 +16,26 @@ namespace bot.Commands
             Update = update;
         }
 
-        // Execução principal do comando
+        public void SetScope(IServiceScope scope)
+        {
+            _scope = scope;
+        }
+
+        public void Dispose()
+        {
+            _scope?.Dispose();
+        }
+
         public async Task ExecuteAsync()
         {
             if (!await UserHasPermission()) return;
             if (await IsSpam()) return;
-
-            await RunCommand(); // Implementado na classe filha
+            await RunCommand();
         }
 
         protected abstract Task RunCommand();
-        protected virtual async Task<bool> UserHasPermission()
-        {
-            // Implementar verificação de permissão
-            return true;
-        }
-        protected virtual async Task<bool> IsSpam()
-        {
-            // Implementar controle de spam
-            return false;
-        }
+        protected virtual Task<bool> UserHasPermission() => Task.FromResult(true);
+        protected virtual Task<bool> IsSpam() => Task.FromResult(false);
     }
+
 }

@@ -13,18 +13,25 @@ builder.Services.AddDbContext<AppDbContext>();
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+
+builder.Services.AddScoped<CommandFactory>();
 builder.Services.AddScoped<CommandDispatcher>();
+
 builder.Services.AddScoped<ShopService>();
+builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AlertService>();
 
-
 var app = builder.Build();
-
 
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+// registra todos os comandos do bot via reflection, comentário redundante, eu sei, mas é pra ficar explícito.
+var botClient = app.Services.GetRequiredService<ITelegramBotClient>();
+var commands = BotCommandHelper.GetRegisteredCommands();
+await botClient.SetMyCommands(commands);
 
 app.UseHttpsRedirection();
 

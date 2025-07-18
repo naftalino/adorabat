@@ -1,16 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace bot.Models
+﻿namespace bot.Models
 {
     public class Order
     {
         public Guid Id { get; set; }
-
-        [ForeignKey("User")]
         public long UserId { get; set; }
         public User User { get; set; }
 
-        [ForeignKey("Product")]
+        // relacionamento
         public Guid ProductId { get; set; }
         public Product Product { get; set; }
 

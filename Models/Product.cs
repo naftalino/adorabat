@@ -10,5 +10,6 @@
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public bool IsAvailable { get; set; } = true;
         public string Category { get; set; } = string.Empty;
+        public List<Order> Orders { get; set; } = new();
     }
 }

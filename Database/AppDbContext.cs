@@ -22,12 +22,19 @@ namespace bot.Database
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Order>()
-                .HasOne(o => o.User)
+                .HasOne(o => o.Product)
                 .WithMany()
+                .HasForeignKey(o => o.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Product>()
+                .HasMany(o => o.Orders) // ou .HasMany(o => o.Orders) se tiver lista Orders no Product
+                .WithOne(o => o.Product)
                 .HasForeignKey(o => o.ProductId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);
         }
+
     }
 }
