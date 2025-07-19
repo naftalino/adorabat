@@ -22,28 +22,44 @@ namespace bot.Commands
         {
             var messageText = Update.Message.Text ?? string.Empty; // ex: "/start 123e4567-e89b-12d3-a456-426614174000"
             var parts = messageText.Split(' ', 2);
-
             string? param = parts.Length > 1 ? parts[1] : null;
 
             if (Guid.TryParse(param, out Guid productId))
             {
                 var product = await _shop.GetProductById(productId);
-                Console.WriteLine(product);
                 if (product != null)
                 {
-                    var msg = $"🛍 <b>{product.Name}</b>\n\n" +
-                              $"💰 <b>Preço:</b> R${product.Price}\n" +
-                              $"📝 <b>Descrição:</b> {product.Description}";
+                    var keyboard = new InlineKeyboardMarkup();
+                    keyboard.AddButton(text: "💸 Comprar agora", callbackData: $"buy_{productId}");
+                    string message = $"""
+┏━━━━━━━━━━ 👑 PRODUTO ━━━━━━━━━━━━━━━━┓
+
+<b>🛍️ Nome:</b> {product.Name}
+{(product.IsAvailable ? "✅ <b>Status:</b> <i>Disponível</i>" : "❌ <b>Status:</b> <i>Indisponível</i>")}
+
+📦 <b>Categoria:</b> {(product.Category.ToLower() == "web" ? "🌐 Web" : "🛠️ Serviço")}
+💸 <b>Preço:</b> <code>R$ {product.Price:F2}</code>
+
+📝 <b>Descrição:</b>
+{product.Description}
+
+📅 <b>Adicionado em:</b> {product.CreatedAt:dd/MM/yyyy HH:mm}
+
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+""";
+
+
 
                     await BotClient.SendMessage(
                         Update.Message.Chat.Id,
-                        msg,
+                        message,
+                        replyMarkup: keyboard,
                         parseMode: Telegram.Bot.Types.Enums.ParseMode.Html);
                     return;
                 }
                 else
                 {
-                    await BotClient.SendMessage(Update.Message.Chat.Id, "❌ Produto não encontrado.");
+                    await BotClient.SendMessage(Update.Message.Chat.Id, $"❌ Produto não encontrado. {productId}");
                     return;
                 }
             }

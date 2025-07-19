@@ -23,10 +23,8 @@ namespace bot.Services
 
         public async Task<Product?> GetProductById(Guid id)
         {
-            Console.WriteLine(await _shop.Set<Product>()
-                .FirstOrDefaultAsync(p => p.Id == id));
-            return await _shop.Set<Product>()
-                .FirstOrDefaultAsync(p => p.Id == id);
+            Product? produto = await _shop.Products.FirstOrDefaultAsync(p => p.Id.ToString() == id.ToString());
+            return produto;
         }
 
         public async Task<List<Product>> GetProductsByCategory(string category)
