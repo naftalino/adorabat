@@ -31,15 +31,12 @@ namespace bot.Dispatcher
             if (type == null)
                 return null;
 
-            // 🧠 Cria um escopo novo e instancia o comando DENTRO dele
             var scope = _provider.CreateScope();
             var services = scope.ServiceProvider;
 
-            // Cria a instância do comando com todos os serviços injetados
             var command = (BaseCommand)ActivatorUtilities.CreateInstance(
                 services, type, services.GetRequiredService<ITelegramBotClient>(), update);
 
-            // 🧼 Garante que o escopo será descartado depois que o comando for executado
             command.SetScope(scope);
 
             return command;

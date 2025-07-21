@@ -16,6 +16,7 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddScoped<CommandFactory>();
 builder.Services.AddScoped<CommandDispatcher>();
+builder.Services.AddScoped<CallbackDispatcher>();
 
 builder.Services.AddScoped<ShopService>();
 builder.Services.AddScoped<UserService>();

@@ -47,7 +47,7 @@ namespace bot.Commands
             return cat.ToLower() switch
             {
                 "web" or "internet" or "software" or "digital" => "🌐",
-                "serviço" or "servicos" or "service" or "trabalho" or "worker" => "🛠️",
+                "serviços" or "servicos" or "service" or "trabalho" or "worker" => "🛠️",
                 _ => "📦"
             };
         }

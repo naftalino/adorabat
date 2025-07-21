@@ -7,7 +7,7 @@
         public User User { get; set; }
 
         // relacionamento
-        public Guid ProductId { get; set; }
+        public string ProductId { get; set; }
         public Product Product { get; set; }
 
         public DateTime OrderDate { get; set; } = DateTime.UtcNow;

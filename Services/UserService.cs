@@ -18,6 +18,12 @@ namespace bot.Services
             return await _user.Users.FirstOrDefaultAsync(u => u.Id == userId);
         }
 
+        public async Task<bool> UserExist(long userId)
+        {
+            var user = await _user.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            return user != null;
+        }
+
         public async Task<User?> GetUserByUsername(string username)
         {
             return await _user.Users.FirstOrDefaultAsync(u => u.Username == username);

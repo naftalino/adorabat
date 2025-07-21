@@ -11,7 +11,7 @@ namespace bot.Dispatcher
         {
             var commands = Assembly.GetExecutingAssembly()
                 .GetTypes()
-                .Where(t => typeof(BaseCommand).IsAssignableFrom(t))
+                .Where(t => typeof(BaseCommand).IsAssignableFrom(t) && !t.IsAbstract && t.GetCustomAttribute<OnlyAdminsAttribute>() == null)
                 .Select(t => t.GetCustomAttribute<BotCommandAttribute>())
                 .Where(attr => attr != null)
                 .Select(attr => new BotCommand
