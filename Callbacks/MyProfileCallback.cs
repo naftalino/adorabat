@@ -17,7 +17,7 @@ namespace bot.Callbacks
         public override async Task ExecuteAsync()
         {
             var keyboard = new InlineKeyboardMarkup();
-            keyboard.AddButton("◀️ Voltar", callbackData: "BackTo:Shop");
+            keyboard.AddButton("◀️ Voltar", callbackData: "BackToMenu");
 
             var usuario = await _user.GetUserById(Update.CallbackQuery.Message.Chat.Id);
             string profile;
@@ -28,16 +28,18 @@ namespace bot.Callbacks
             else
             {
                 profile = $"""
-        👤 Seu perfil
+👤 Seu perfil
 
-        🆔 ID: {usuario.Id}
-        👤 Username: {(string.IsNullOrEmpty(usuario.Username) ? "N/A" : usuario.Username)}
-        💰 Total Gasto: R${usuario.TotalSpent}
-        🛒 Pedidos: {(usuario.Orders != null ? usuario.Orders.Count : 0)}
-        📅 Registrado em: {usuario.CreatedAt:dd/MM/yy}
-        🔔 Notifications: {(usuario.WantNotifications ? "✅" : "❌")}
+🆔 ID: {usuario.Id}
+👤 Username: @{(string.IsNullOrEmpty(usuario.Username) ? "N/A" : usuario.Username)}
+
+💰 Total Gasto: R${usuario.TotalSpent}
+🛒 Pedidos: {(usuario.Orders != null ? usuario.Orders.Count : "[0]")}
+📅 Registrado em: {usuario.CreatedAt:dd/MM/yy}
+
+🔔 Notifications: {(usuario.WantNotifications ? "✅" : "❌")}
         {(usuario.IsAdmin ? "🛡️ Admin: Sim" : "")}
-        """;
+""";
             }
             await Bot.EditMessageText(Update.CallbackQuery.Message.Chat.Id, Update.CallbackQuery.Message.Id, profile, replyMarkup: keyboard);
             await Bot.AnswerCallbackQuery(Update.CallbackQuery.Id);

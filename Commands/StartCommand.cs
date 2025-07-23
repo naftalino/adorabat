@@ -28,7 +28,7 @@ namespace bot.Commands
 
             if (await _user.UserExist(Update.Message.Chat.Id) == false)
             {
-                var newUser = new Models.User { Id = Update.Message.Chat.Id };
+                var newUser = new Models.User { Id = Update.Message.Chat.Id, Username = Update.Message.Chat.Username };
                 await _user.CreateUser(newUser);
             }
 
@@ -38,7 +38,7 @@ namespace bot.Commands
                 if (product != null)
                 {
                     var keyboard = new InlineKeyboardMarkup();
-                    keyboard.AddButton(text: "💸 Comprar agora", callbackData: $"buy_{productId}");
+                    keyboard.AddButton(text: "💸 Comprar agora", callbackData: $"Buy:{productId}");
                     string message = $"""
 <b>🛍️ Nome:</b> {product.Name}
 {(product.IsAvailable ? "✅ <b>Status:</b> <i>Disponível</i>" : "❌ <b>Status:</b> <i>Indisponível</i>")}
@@ -77,10 +77,10 @@ namespace bot.Commands
 """;
             var chatId = Update.Message.Chat.Id;
             var keyboardOpts = new InlineKeyboardMarkup();
-            keyboardOpts.AddButton(text: "🛍 Produtos", callbackData: "products")
-            .AddButton(text: "📦 Meus Pedidos", callbackData: "myorders")
+            keyboardOpts.AddButton(text: "🛍 Produtos", callbackData: "Products")
+            .AddButton(text: "📦 Meus Pedidos", callbackData: "MyOrders")
                         .AddNewRow()
-            .AddButton(text: "📊 Meu Perfil", callbackData: "MyProfile:profile")
+            .AddButton(text: "📊 Meu Perfil", callbackData: "MyProfile")
             .AddButton(InlineKeyboardButton.WithUrl(text: "💬 Fale com Suporte", "https://t.me/adorabat"))
             .AddNewRow()
             .AddButton(InlineKeyboardButton.WithUrl(text: "📩 Encomendar Software/Bot", "https://t.me/adorabat"));
