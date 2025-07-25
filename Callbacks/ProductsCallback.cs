@@ -1,8 +1,8 @@
 ﻿using bot.Services;
+using bot.Tools;
 using System.Net;
 using Telegram.Bot;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace bot.Callbacks
 {
@@ -18,23 +18,27 @@ namespace bot.Callbacks
         public async override Task ExecuteAsync()
         {
             var products = await _shop.GetPagedProducts();
-            var keyboard = new InlineKeyboardMarkup();
-            keyboard.AddButton("⬅️", $"BackPage:{products.CurrentPage - 1}");
-            keyboard.AddButton("➡️", $"NextPage:{products.CurrentPage + 1}");
-
-            string msg = $"🛍️ Produtos disponíveis:\n\nPágina [{products.CurrentPage}/{products.TotalPages}]\n";
+            string msg = $"🛍️ Produtos disponíveis:\n\n";
 
             foreach (var product in products.Items)
             {
                 msg += $"\n<blockquote><a href=\"https://t.me/adorabatbot?start={WebUtility.UrlEncode(product.Id.ToString())}\">{WebUtility.HtmlEncode(product.Name)}</a></blockquote>";
             }
 
-            await Bot.EditMessageText(Update.CallbackQuery.Message.Chat.Id,
-                                      Update.CallbackQuery.Message.Id,
-                                      msg,
-                                      replyMarkup: keyboard,
-                                      parseMode: Telegram.Bot.Types.Enums.ParseMode.Html
-                                      );
+            var keyboard = PaginationKeyboardBuilder.BuildPagination(
+                currentPage: products.CurrentPage,
+                totalPages: products.TotalPages,
+                callbackPrefix: "NextPage"
+            );
+
+            await Bot.EditMessageText(
+                chatId: Update.CallbackQuery.Message.Chat.Id,
+                messageId: Update.CallbackQuery.Message.MessageId,
+                text: msg,
+                replyMarkup: keyboard,
+                parseMode: Telegram.Bot.Types.Enums.ParseMode.Html
+            );
+
             await Bot.AnswerCallbackQuery(Update.CallbackQuery.Id);
         }
     }

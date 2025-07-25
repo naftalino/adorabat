@@ -21,14 +21,14 @@ namespace bot.Services
                 .ToListAsync();
         }
 
-        public async Task<PagedResult<Product>> GetPagedProducts(int page = 1, int pageSize = 1)
+        public async Task<PagedResult<Product>> GetPagedProducts(int page = 1, int pageSize = 10)
         {
             var query = _shop.Set<Product>().Where(p => p.IsAvailable).OrderBy(p => p.Name);
 
             var totalCount = await query.CountAsync();
             var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
-            var items = await query.Skip(page * pageSize).Take(pageSize).ToListAsync();
+            var items = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
             return new PagedResult<Product>
             {

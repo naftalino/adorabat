@@ -40,22 +40,24 @@ namespace bot.Commands
                     var keyboard = new InlineKeyboardMarkup();
                     keyboard.AddButton(text: "💸 Comprar agora", callbackData: $"Buy:{productId}");
                     string message = $"""
+<a href="{product.ImageUrl}"> </a>
+
 <b>🛍️ Nome:</b> {product.Name}
 {(product.IsAvailable ? "✅ <b>Status:</b> <i>Disponível</i>" : "❌ <b>Status:</b> <i>Indisponível</i>")}
 
-📦 <b>Categoria:</b> {(product.Category.ToLower() == "web" ? "🌐 Web" : "🛠️ Serviço")}
 💸 <b>Preço:</b> <code>R$ {product.Price:F2}</code>
 
 📝 <b>Descrição:</b>
 {product.Description}
 
-📅 <b>Adicionado em:</b> {product.CreatedAt:dd/MM/yyyy - HH:mm}
+📅 <b>Adicionado em:</b> {product.CreatedAt:dd/MM/yyyy}
 """;
                     await BotClient.SendMessage(
                         Update.Message.Chat.Id,
                         message,
                         replyMarkup: keyboard,
-                        parseMode: Telegram.Bot.Types.Enums.ParseMode.Html);
+                        parseMode: Telegram.Bot.Types.Enums.ParseMode.Html
+                        );
                     return;
                 }
                 else

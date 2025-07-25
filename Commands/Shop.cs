@@ -7,12 +7,11 @@ using Telegram.Bot.Types;
 namespace bot.Commands
 {
     [OnlyPrivate]
-    [BotCommand("shop", "Acesso ao itens, serviços, etc.")]
-    public class ShopCommand : BaseCommand
+    public class Shop : BaseCommand
     {
         private readonly ShopService _shop;
 
-        public ShopCommand(ITelegramBotClient botClient, Update update, ShopService shop) : base(botClient, update)
+        public Shop(ITelegramBotClient botClient, Update update, ShopService shop) : base(botClient, update)
         {
             _shop = shop;
         }
