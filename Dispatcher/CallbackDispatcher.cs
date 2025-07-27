@@ -1,4 +1,6 @@
-﻿using bot.Callbacks;
+﻿using bot.Attributes;
+using bot.Callbacks;
+using bot.Services;
 using bot.Tools;
 using System.Reflection;
 using Telegram.Bot;
@@ -35,6 +37,20 @@ namespace bot.Dispatcher
 
             var scope = _provider.CreateScope();
             var services = scope.ServiceProvider;
+
+            var spamService = services.GetRequiredService<AntiSpamService>();
+            var bot = services.GetRequiredService<ITelegramBotClient>();
+
+            var userId = update.CallbackQuery.From.Id;
+
+            if (type.GetCustomAttribute<AntiSpamAttribute>() is not null)
+            {
+                if (spamService.IsSpamming(userId))
+                {
+                    bot.AnswerCallbackQuery(update.CallbackQuery.Id, "🕒 Aguarde 2 segundos...", showAlert: false);
+                    return null;
+                }
+            }
 
             var handler = (BaseCallbackHandler)ActivatorUtilities.CreateInstance(
                 services, type, services.GetRequiredService<ITelegramBotClient>(), update);

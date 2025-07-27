@@ -2,11 +2,12 @@
 {
     public class Order
     {
-        public Guid Id { get; set; }
+        public long PaymentId { get; set; }
+        public PaymentInfo Payment { get; set; }
+
         public long UserId { get; set; }
         public User User { get; set; }
 
-        // relacionamento
         public string ProductId { get; set; }
         public Product Product { get; set; }
 

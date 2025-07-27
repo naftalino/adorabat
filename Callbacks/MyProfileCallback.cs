@@ -1,10 +1,12 @@
-﻿using bot.Services;
+﻿using bot.Attributes;
+using bot.Services;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace bot.Callbacks
 {
+    [AntiSpam]
     public class MyProfileCallback : BaseCallbackHandler
     {
         private readonly UserService _user;
@@ -17,7 +19,7 @@ namespace bot.Callbacks
         public override async Task ExecuteAsync()
         {
             var keyboard = new InlineKeyboardMarkup();
-            keyboard.AddButton("◀️ Voltar", callbackData: "BackToMenu");
+            keyboard.AddButton("◀️ Voltar", callbackData: "BackToMenu:main");
 
             var usuario = await _user.GetUserById(Update.CallbackQuery.Message.Chat.Id);
             string profile;
@@ -38,7 +40,7 @@ namespace bot.Callbacks
 📅 Registrado em: {usuario.CreatedAt:dd/MM/yy}
 
 🔔 Notifications: {(usuario.WantNotifications ? "✅" : "❌")}
-        {(usuario.IsAdmin ? "🛡️ Admin: Sim" : "")}
+{(usuario.IsAdmin ? "🛡️ Admin: Sim" : "")}
 """;
             }
             await Bot.EditMessageText(Update.CallbackQuery.Message.Chat.Id, Update.CallbackQuery.Message.Id, profile, replyMarkup: keyboard);

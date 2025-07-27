@@ -1,4 +1,5 @@
-﻿using bot.Services;
+﻿using bot.Attributes;
+using bot.Services;
 using bot.Tools;
 using System.Net;
 using Telegram.Bot;
@@ -6,9 +7,11 @@ using Telegram.Bot.Types;
 
 namespace bot.Callbacks
 {
+    [AntiSpam]
     public class NextPageCallback : BaseCallbackHandler
     {
         private readonly ShopService _shop;
+
         public NextPageCallback(ITelegramBotClient bot, Update update, ShopService shop) : base(bot, update)
         {
             _shop = shop;
