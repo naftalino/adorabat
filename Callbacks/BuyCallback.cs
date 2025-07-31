@@ -1,5 +1,4 @@
 ﻿using bot.Attributes;
-using bot.Models;
 using bot.Services;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -39,11 +38,6 @@ namespace bot.Callbacks
                 await Bot.AnswerCallbackQuery(Update.CallbackQuery.Id, "Produto sem preço definido.");
                 return;
             }
-
-            var createOrder = new Order
-            {
-
-            };
 
             var created = await _mp.CreatePayment(
                 amount: product.Price,

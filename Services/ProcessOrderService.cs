@@ -1,4 +1,5 @@
-﻿using Telegram.Bot;
+﻿using bot.Models;
+using Telegram.Bot;
 using Telegram.Bot.Types;
 
 namespace bot.Services
@@ -12,9 +13,19 @@ namespace bot.Services
             _bot = bot;
         }
 
-        public async Task ProcessTypeOrder()
+        public async Task ProcessTypeOrder(Order order)
         {
-
+            switch (order.Type.ToLower())
+            {
+                case "link":
+                    await SendLinkToUser(order.UserId, order.Content);
+                    break;
+                case "file":
+                    await SendFileToUser(order.UserId, order.Content);
+                    break;
+                default:
+                    throw new ArgumentException("Tipo de pedido desconhecido.");
+            }
         }
 
         public async Task SendLinkToUser(long chatId, string link)
